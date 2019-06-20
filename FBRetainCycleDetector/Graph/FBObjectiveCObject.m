@@ -79,7 +79,9 @@
       NSMutableSet *temporaryRetainedObjects = [NSMutableSet new];
       @try {
         for (id subobject in self.object) {
-          if (retainsKeys) {
+            //since subobject might be released in other place, and the pointer might be invalid.
+            //to avoid crash, compare the pointer with a constant value.
+          if (retainsKeys && subobject > 0x1000) {
             FBObjectiveCGraphElement *element = FBWrapObjectGraphElement(self, subobject, self.configuration);
             if (element) {
               [temporaryRetainedObjects addObject:element];
